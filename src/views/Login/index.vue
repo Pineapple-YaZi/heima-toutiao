@@ -85,6 +85,7 @@ export default {
         console.log(res.data)
         this.$store.commit('setUser', res.data)
         Toast.success('登录成功！')
+        this.$router.push('/profile')
       } catch (err) {
         console.dir(err)
       }
