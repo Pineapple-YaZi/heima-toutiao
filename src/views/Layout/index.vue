@@ -31,7 +31,7 @@
 
       <van-tabbar-item to="/profile" icon="setting-o">
         <!-- 默认插槽 -->
-        <span>我的</span>
+        <span>{{ $store.state.user ? '我的' : '未登录'}}</span>
         <!-- 具名插槽 -->
         <template #icon>
           <i class="toutiao toutiao-wode"></i>

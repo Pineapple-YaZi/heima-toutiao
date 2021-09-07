@@ -3,7 +3,11 @@
     <van-nav-bar
       title="标题"
       class="page-nav-bar"
-    />
+    >
+    <template #left>
+      <van-icon @click="$router.back()" color="#fff" name="cross" />
+    </template>
+    </van-nav-bar>
     <van-form @submit="onSubmit" ref="form">
       <van-field
         v-model="form.mobile"
@@ -81,9 +85,8 @@ export default {
     // 登录请求
     async onSubmit () {
       try {
-        const { data: res } = await login(this.form)
-        console.log(res.data)
-        this.$store.commit('setUser', res.data)
+        const res = await login(this.form)
+        this.$store.commit('setUser', res)
         Toast.success('登录成功！')
         this.$router.push('/profile')
       } catch (err) {
@@ -103,11 +106,6 @@ export default {
         }
         Toast('网络异常！')
       }
-      // Toast.loading({
-      //   message: '发送中...',
-      //   forbidClick: true,
-      //   duration: 0 // 持续展示
-      // })
       // 校验成功 发送请求
       try {
         await sendCode(this.form.mobile)

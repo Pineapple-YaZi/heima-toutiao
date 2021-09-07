@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Toast } from 'vant'
+import store from '../store/index'
 
 // axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/'
 const request = axios.create({
@@ -7,23 +8,25 @@ const request = axios.create({
 })
 
 // 添加请求拦截器
-// request.interceptors.request.use(function (config) {
-//   // 在发送请求之前做些什么
-//   return config
-// }, function (error) {
-//   // 对请求错误做些什么
-//   return Promise.reject(error)
-// })
-
 request.interceptors.request.use(config => {
   console.log(config)
+  if (config.url.indexOf('/user') !== -1) {
+    // config: 请求配置信息
+    config.headers.Authorization = 'Bearer ' + store.state.user.token
+  }
   // config: 请求配置信息
   Toast.loading({
-    message: '发送中...',
+    message: '加载中...',
     forbidClick: true,
     duration: 0 // 持续展示
   })
   return config
+})
+
+// 添加相应拦截器
+request.interceptors.response.use(res => {
+  Toast.clear()
+  return res.data.data
 })
 
 // 使用实例发送请求和axios发送请求一样
