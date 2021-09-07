@@ -6,6 +6,7 @@ import Home from '../views/Home'
 import Video from '../views/Video'
 import Qa from '../views/Qa'
 import Profile from '../views/Profile'
+import Search from '../views/Home/Search'
 
 Vue.use(VueRouter)
 
@@ -15,12 +16,22 @@ const routes = [
     component: Login
   },
   {
+    path: '/',
+    redirect: '/home'
+  },
+  {
     path: '/layout',
     component: Layout,
     children: [
       {
         path: '/home',
-        component: Home
+        component: Home,
+        children: [
+          {
+            path: '/search',
+            component: Search
+          }
+        ]
       },
       {
         path: '/video',
