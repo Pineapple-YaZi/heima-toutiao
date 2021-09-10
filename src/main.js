@@ -5,6 +5,7 @@ import store from './store'
 import './vant'
 import 'amfe-flexible'
 import './styles/index.css'
+import './filters/index'
 
 Vue.config.productionTip = false
 

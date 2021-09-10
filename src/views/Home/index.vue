@@ -16,12 +16,23 @@
         <ArticleList :channelId='item.id'></ArticleList>
       </van-tab>
       <template #nav-right>
-        <div class="right-btn">
+        <div class="right-btn" @click="isShowEditPopup = true">
           <i class="toutiao toutiao-gengduo"></i>
         </div>
         <div class="placeholderBox"></div>
       </template>
     </van-tabs>
+
+    <!-- 编辑弹出层 -->
+    <van-popup
+      v-model="isShowEditPopup"
+      closeable
+      position="bottom"
+      :style="{ height: '90%' }"
+      close-icon-position="top-left"
+    >
+    <ChannelEdit @updata-active="onUpdataActive" :myChannels = channels :activeIndex = active ></ChannelEdit>
+    </van-popup>
   </div>
 </template>
 
@@ -29,11 +40,14 @@
 import ArticleList from './components/ArticleList.vue'
 import { getUserChannels } from '@/api/user.js'
 import { Toast } from 'vant'
+import ChannelEdit from './components/ChannelEdit.vue'
+import { getItem } from '../../utils/storage'
 export default {
   data () {
     return {
       active: 0,
-      channels: []
+      channels: [],
+      isShowEditPopup: false
     }
   },
 
@@ -42,17 +56,33 @@ export default {
   },
 
   components: {
-    ArticleList
+    ArticleList,
+    ChannelEdit
   },
 
   methods: {
     async loadUserChannels () {
       try {
-        const res = await getUserChannels()
-        this.channels = res.channels
+        // 用户登录了 发送请求
+        // 用户没登录 判断本地是否有数据
+        // 本地有数据用本地
+        // 本地没有数据发请求
+        // 什么时候用本地数据 未登录 且本地有数据
+        const localChannel = getItem('HMTT-CHANNELS')
+        if (!this.$store.state.user && localChannel) {
+          this.channels = localChannel
+        } else {
+          // 什么时候发请求
+          const res = await getUserChannels()
+          this.channels = res.channels
+        }
       } catch (err) {
         Toast('登录过期！')
       }
+    },
+    onUpdataActive (index, isShow) {
+      this.active = index
+      this.isShowEditPopup = isShow
     }
   }
 }
@@ -126,7 +156,7 @@ export default {
       z-index: 999;
       width: 66px;
       height: 80px;
-      position: absolute;
+      position: fixed;
       background-color: rgba(255, 255, 255, .9);
       right: 0;
       display: flex;
