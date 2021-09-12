@@ -16,7 +16,7 @@ request.interceptors.request.use(config => {
     // config: 请求配置信息
     config.headers.Authorization = 'Bearer ' + store.state.user.token
   }
-  if (config.url !== '/v1_1/articles') {
+  if (config.url !== '/v1_1/articles' && config.url !== '/v1_0/search') {
     Toast.loading({
       message: '加载中...',
       forbidClick: true,
