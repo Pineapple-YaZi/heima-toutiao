@@ -7,6 +7,7 @@ import Video from '../views/Video'
 import Qa from '../views/Qa'
 import Profile from '../views/Profile'
 import Search from '../views/Search'
+import Article from '../views/Article'
 
 Vue.use(VueRouter)
 
@@ -44,6 +45,11 @@ const routes = [
   {
     path: '/search',
     component: Search
+  },
+  {
+    path: '/article/:articleId',
+    component: Article,
+    props: true // 通过路由传参
   }
 ]
 

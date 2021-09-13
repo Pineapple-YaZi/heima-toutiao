@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-cell value="内容" >
+    <van-cell :to="'/article/' + articleItem.art_id " value="内容" >
       <!-- 对标题进行自定义 -->
       <template #title>
         <div class="van-multi-ellipsis--l2">
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+// import { getArticleDetail } from '../../api/article'
 export default {
   data () {
     return {
@@ -52,7 +53,6 @@ export default {
   },
 
   created () {
-
   },
 
   methods: {

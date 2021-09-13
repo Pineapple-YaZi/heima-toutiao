@@ -1,6 +1,7 @@
 <template>
   <div class="articleList">
     <van-pull-refresh
+
     v-model="isPullLoging"
     @refresh="onRefresh"
     :success-text="pullText"
@@ -14,7 +15,7 @@
         error-text="请求失败，点击重新加载"
         :error.sync="error"
       >
-        <ArticleItem :articleItem="item" v-for="item in list" :key="item.art_id"/>
+        <ArticleItem :articleItem="item" v-for="item in list" :key="item.art_id +''"/>
 
       </van-list>
     </van-pull-refresh>
@@ -64,7 +65,7 @@ export default {
           timestamp: this.preTimestamp || Date.now(),
           with_top: 1
         })
-        if (Math.random() > 0.2) {
+        if (Math.random() > 0.8) {
           console.lg('123')
         }
         // 2、保存数据
@@ -90,7 +91,7 @@ export default {
           timestamp: Date.now(),
           with_top: 1
         })
-        if (Math.random() > 0.2) {
+        if (Math.random() > 0.8) {
           console.lg('132')
         }
         this.list.unshift(...res.results)
