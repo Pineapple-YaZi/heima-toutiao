@@ -60,7 +60,20 @@ export const removeCollected = target => {
 export const getComment = params => {
   return request({
     url: '/v1_0/comments',
-    data: 'GET',
+    method: 'GET',
     params
+  })
+}
+
+/**
+ * 发布评论
+ * @param {*} data { target, content, art_id }
+ * @returns promise
+ */
+export const postComment = data => {
+  return request({
+    url: 'v1_0/comments',
+    method: 'POST',
+    data
   })
 }

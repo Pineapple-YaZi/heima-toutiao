@@ -62,7 +62,7 @@
         <!-- 文章内容 -->
         <div ref="content" class="article-content" v-html="article.content">这是文章内容</div>
         <van-divider>正文结束</van-divider>
-        <CommentList :source="article.art_id"></CommentList>
+        <CommentList @clickReply="onClickReply" :list="list" @updataCount="totalCount = $event" :source="article.art_id"></CommentList>
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -90,10 +90,11 @@
         type="default"
         round
         size="small"
+        @click="isShowPost = true"
       >写评论</van-button>
       <van-icon
         name="comment-o"
-        badge="123"
+        :badge="totalCount"
         color="#777"
       />
       <ArtCollect @onArtCol="article.art_id = $event" :artId="article.art_id" v-model="article.is_collected"></ArtCollect>
@@ -104,6 +105,18 @@
       <van-icon name="share" color="#777777"></van-icon>
     </div>
     <!-- /底部区域 -->
+    <!-- 弹出层 -->
+    <van-popup v-model="isShowPost" position="bottom" >
+      <CommentPost @onPostSuccess="onClose" :target="articleId"></CommentPost>
+    </van-popup>
+    <!-- 恢复评论弹出层 -->
+    <van-popup
+      v-model="isShowReply"
+      position="bottom"
+      :style="{ height: '100%' }"
+    >
+    <CommentReply v-if="isShowReply" @closeReply="isShowReply = false" :comment="comment" />
+    </van-popup>
   </div>
 </template>
 
@@ -114,12 +127,19 @@ import './github-markdown.css'
 import FollowedUser from '@/components/FollowedUser.vue'
 import CommentList from '@/components/CommentList.vue'
 import ArtCollect from '../../components/artCollect.vue'
+import CommentPost from './components/commentPost.vue'
+import CommentReply from './components/commentReply'
 export default {
   data () {
     return {
       article: {},
       isLoading: true,
-      is404: false
+      is404: false,
+      totalCount: 0,
+      isShowPost: false,
+      list: [],
+      isShowReply: false,
+      comment: {}
     }
   },
 
@@ -133,7 +153,9 @@ export default {
   components: {
     FollowedUser,
     ArtCollect,
-    CommentList
+    CommentList,
+    CommentPost,
+    CommentReply
   },
 
   created () {
@@ -177,6 +199,14 @@ export default {
           })
         }
       })
+    },
+    onClose (obj) {
+      this.isShowPost = false
+      this.list.unshift(obj)
+    },
+    onClickReply (comment) {
+      this.isShowReply = true
+      this.comment = comment
     }
     // 点击关注或取消关注
     // async onFollowed () {
